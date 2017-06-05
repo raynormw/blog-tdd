@@ -96,7 +96,7 @@ function deleteUser(req, res) {
 
 function login(req, res) {
   Users.findOne({
-    'username' : req.body.username
+    username : req.body.username
   }, function(err, user) {
     if (err) {
       res.send(err.message);
@@ -104,7 +104,7 @@ function login(req, res) {
     bcrypt.compare(req.body.password, user.password, function(err, result) {
       if (result) {
         let token = jwt.sign({role: user.role, id: user._id, username: user.username}, secret);
-        res.send(token);
+        res.send({token: token});
       } else {
         res.send("Wrong password..")
       }

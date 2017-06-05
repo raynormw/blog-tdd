@@ -40,8 +40,7 @@ function createArticle(req, res) {
       user.article_list.push(article._id);
       user.save(function(err) {
         if (err) res.send(err.message);
-        console.log("Add article Success..");
-        res.send(user);
+        res.send({msg: 'Add article Success..', user: user, data: article});
       });
     });
   });
@@ -63,7 +62,7 @@ function updateArticle(req, res) {
       }
     }, function(err, result) {
       if (err) res.send(err.message);
-      res.send(result);
+      res.send({msg: 'Update success!', data: result});
     });
   });
 }
@@ -71,11 +70,11 @@ function updateArticle(req, res) {
 function deleteArticle(req, res) {
   Articles.remove({
     '_id': req.params.id
-  }, function(err, memo) {
+  }, function(err, result) {
     if (err) {
       res.send(err.message);
     }
-    res.send(memo);
+    res.send({msg: 'Delete success!', data: result});
   });
 }
 
