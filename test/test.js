@@ -1,10 +1,13 @@
-const chai = require('../server/node_modules/chai');
-const chaiHttp = require('../server/node_modules/chai-http');
+require('dotenv').config();
+const chai = require('chai');
+const chaiHttp = require('chai-http');
 const should = chai.should();
 const Article = require('../server/models/articles_model');
-const jwt = require('../server/node_modules/jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const server = 'http://localhost:3000';
 let article_id = "";
+let author_id = '5935b2e1bcc97713e44a16a7';
+let secret = process.env.SECRET_KEY;
 
 chai.use(chaiHttp)
 
@@ -13,7 +16,7 @@ describe('post new article', function () {
     chai.request(server)
     .post('/articles')
     .send({
-      author: '5935b2e1bcc97713e44a16a7',
+      author: author_id,
       title : 'Hello World!',
       content : 'Lorem Ipsum Dolor Sit Amet',
       category : 'test',
@@ -46,7 +49,7 @@ describe('get all articles',function () {
 describe('get article by author',function () {
   it('should get article by author when calling with GET method', function (done) {
     chai.request(server)
-    .get('/articles/5935b2e1bcc97713e44a16a7')
+    .get('/articles/' + author_id)
     .end(function (err,res) {
       res.should.have.status(200);
       res.should.be.json;
@@ -90,7 +93,7 @@ describe('login succeed', function () {
     })
     .end(function (err,res) {
       res.should.have.status(200)
-      jwt.verify(res.body.token, 'acmilan').username.should.equal('admin')
+      jwt.verify(res.body.token, secret).username.should.equal('admin')
       done()
     })
   })
